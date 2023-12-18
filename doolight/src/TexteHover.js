@@ -21,7 +21,11 @@ const TexteHover = () => {
 
   return (
     <div className="texte-hover" onMouseEnter={toggleHover} onMouseLeave={toggleHover} style={textStyle}>
-      Hello! je change de couleur quand tu me touches
+     <h2>
+        <b>
+           Hello! je change de couleur quand tu me touches
+        </b>
+      </h2> 
     </div>
   );
 };
