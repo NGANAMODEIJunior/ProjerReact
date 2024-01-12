@@ -1,17 +1,21 @@
-// Importer le module HTTP
-const http = require('http');
+// server.js
+const net = require('net');
+const dataStore = require('./dataStore');
 
-// Définir le port sur lequel le serveur écoutera les requêtes
-const port = 3000;
+const server = net.createServer(socket => {
+  console.log('Client connecté');
 
-// Créer le serveur
-const server = http.createServer((req, res) => {
-    // Code pour gérer les requêtes
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Bonjour ! Ceci est un serveur Node.js.');
+  socket.on('data', data => {
+    const newData = data.toString();
+    console.log('Données reçues :', newData);
+    dataStore.setReceivedData(newData);
+  });
+
+  socket.on('end', () => {
+    console.log('Client déconnecté');
+  });
 });
 
-// Écouter les requêtes sur le port spécifié
-server.listen(port, () => {
-    console.log(`Le serveur écoute sur le port ${port}`);
+server.listen(3010, () => {
+  console.log('Serveur TCP démarré sur le port 3010');
 });
