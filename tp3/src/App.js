@@ -1,45 +1,49 @@
-// App.js
 import React, { useState, useEffect } from 'react';
-import L from 'leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import './App.css';
 
-function App() {
-  // eslint-disable-next-line no-unused-vars
-  const [data, setData] = useState('');
+const App = () => {
+  const [gpsData, setGpsData] = useState({ latitude: 0, longitude: 0 });
 
   useEffect(() => {
+    // Fetch GPS data from your server
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3010');
-        const result = await response.json();
-        console.log('Données GPS reçues :', result);
-
-        updateMap(result.latitude, result.longitude);
+        const response = await fetch('http://localhost:3005');
+        const data = await response.json(); // Assuming your server returns JSON
+        setGpsData(data);
       } catch (error) {
-        console.error('Erreur lors de la récupération des données :', error);
+        console.error('Error fetching GPS data:', error);
       }
     };
 
     fetchData();
   }, []);
 
-  const updateMap = (latitude, longitude) => {
-    const map = L.map('map').setView([latitude, longitude], 13);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-
-    L.marker([latitude, longitude]).addTo(map);
-  };
-
   return (
-    <div className="App">
-      <h1>Données reçues depuis le serveur :</h1>
-      <div id="map" style={{ height: '400px' }}></div>
+    <div>
+      <h1>Données GPS</h1>
+      <p>Latitude: {gpsData.latitude}</p>
+      <p>Longitude: {gpsData.longitude}</p>
+
+      <MapContainer
+        center={[gpsData.latitude, gpsData.longitude]}
+        zoom={13}
+        style={{ height: '400px', width: '100%' }}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <Marker position={[gpsData.latitude, gpsData.longitude]}>
+          <Popup>
+            Latitude: {gpsData.latitude} <br />
+            Longitude: {gpsData.longitude}
+          </Popup>
+        </Marker>
+      </MapContainer>
     </div>
   );
-}
+};
 
 export default App;
