@@ -7,8 +7,24 @@ const port = 3005;
 app.use(cors());
 
 app.get('/', (req, res) => {
-  const data = dataStore.getReceivedData() || 'Aucune donnée reçue';
-  res.json({ gpsData: data });
+  const rawData = dataStore.getReceivedData();
+  const gpsDataArray = [];
+
+  if (rawData) {
+    const dataList = JSON.parse(rawData);
+    
+    // Ajouter l'heure aux données GPS
+    dataList.forEach(entry => {
+      const gpsDataWithTime = {
+        time: entry.time,
+        latitude: entry.latitude,
+        longitude: entry.longitude,
+      };
+      gpsDataArray.push(gpsDataWithTime);
+    });
+  }
+
+  res.json({ gpsData: gpsDataArray });
 });
 
 app.listen(port, () => {

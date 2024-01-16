@@ -10,18 +10,30 @@ const App = () => {
       try {
         const response = await fetch('http://localhost:3005');
         const data = await response.json();
-        setGpsData(data.gpsData ? JSON.parse(data.gpsData) : { latitude: 0, longitude: 0 });
+  
+        // Modification pour traiter le cas où gpsData est un tableau
+        const firstCoordinate = data.gpsData && data.gpsData[0];
+  
+        if (firstCoordinate) {
+          console.log('Data from API:', data);
+          setGpsData(firstCoordinate);
+        } else {
+          console.warn('Empty or invalid GPS data received:', data);
+        }
       } catch (error) {
         console.error('Error fetching GPS data:', error);
       }
     };
-
+  
     fetchData();
   }, []);
-
+  
   // Vérification des coordonnées GPS valides
   const isValidGPS = !isNaN(gpsData.latitude) && !isNaN(gpsData.longitude);
-
+  
+  // Ajout de logs pour déboguer
+  console.log('Latitude:', gpsData.latitude, 'Longitude:', gpsData.longitude);
+  console.log('isValidGPS:', isValidGPS);
   return (
     <div>
       <h1>Données GPS</h1>
