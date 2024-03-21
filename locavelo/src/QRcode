@@ -1,0 +1,9 @@
+// QRCodeGenerator.js
+import React from 'react';
+import QRCode from 'qrcode.react';
+
+const QRCodeGenerator = ({ data }) => {
+  return <QRCode value={data} />;
+};
+
+export default QRCodeGenerator;
