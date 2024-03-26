@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import './App.css';
 import axios from 'axios';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';// Importez Link pour gérer les redirections
+import AdminLogin from './AdminLogin.js'; // Importez la page de connexion pour l'administrateur
+import AdminDashboard from './AdminDashboard.js'; // Importez la page du tableau de bord administrateur
+
 
 function App() {
   const [formData, setFormData] = useState({
@@ -74,7 +78,7 @@ function App() {
         />
         <label htmlFor="codeRetour">Code de Retour :</label>
         <input
-          type="text"
+          type="int"
           id="codeRetour"
           name="codeRetour"
           value={formData.codeRetour}
@@ -86,7 +90,23 @@ function App() {
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
       </form>
+    <Router>
+<div className="App">
+  <h1>Interface principale</h1>
+  <Link to="/AdminLogin" className="admin-login-link">Se connecter en tant qu'administrateur</Link>
+  {/* Définissez le chemin '/admin-login' dans votre routeur pour rediriger vers la page de connexion pour l'administrateur */}
+  
+  {/* Définissez vos autres routes ici */}
+  <Switch>
+    <Route path="/admin-login" component={AdminLogin} />
+    <Route path="/admin-dashboard" component={AdminDashboard} />
+    {/* Définissez d'autres routes si nécessaire */}
+  </Switch>
+</div>
+</Router>
     </div>
+
+
   );
 }
 
