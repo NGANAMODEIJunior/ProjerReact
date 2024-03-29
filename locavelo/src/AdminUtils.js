@@ -1,10 +1,7 @@
-// adminUtils.js
+import connection from './database.js';
 
-const connection = require('./database.js');
-
-// Fonction pour vérifier les identifiants administrateurs dans la base de données
 const verifyAdminCredentials = (username, password, callback) => {
-    const sql = 'SELECT * FROM Admins WHERE username = ? AND password = ?';
+    const sql = 'SELECT * FROM Admin WHERE pseudo = ? AND MDP = ?';
     connection.query(sql, [username, password], (err, result) => {
         if (err) {
             console.error('Erreur lors de la vérification des identifiants administrateurs :', err);
@@ -19,4 +16,5 @@ const verifyAdminCredentials = (username, password, callback) => {
     });
 };
 
-module.exports = { verifyAdminCredentials };
+export default verifyAdminCredentials;
+
