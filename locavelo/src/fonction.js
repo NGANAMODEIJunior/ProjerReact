@@ -1,5 +1,3 @@
-// fonction.js
-
 const connection = require('./database.js'); 
 
 const getUserId = (nom, prenom, telephone, callback) => {
@@ -30,14 +28,14 @@ const getUserId = (nom, prenom, telephone, callback) => {
 };
 
 const getVeloId = (idVelo, callback) => {
-    const sql = 'SELECT ID FROM Velo WHERE ID = ?'; // Utiliser le nom de la colonne correct
+    const sql = 'SELECT ID FROM Velo WHERE ID = ?'; 
     connection.query(sql, [idVelo], (err, result) => {
         if (err) {
             console.error('Erreur lors de la récupération de l\'ID du vélo :', err);
             callback(err, null);
         } else {
             if (result.length > 0) {
-                const veloId = result[0].ID; // Utiliser le nom de la colonne correct
+                const veloId = result[0].ID;
                 callback(null, veloId);
             } else {
                 console.error('ID du vélo introuvable');
@@ -46,6 +44,25 @@ const getVeloId = (idVelo, callback) => {
         }
     });
 };
+
+const checkVeloAvailability = (veloId, callback) => {
+    const sql = 'SELECT * FROM Location WHERE VeloID = ?'; 
+    connection.query(sql, [veloId], (err, result) => {
+        if (err) {
+            console.error('Erreur lors de la vérification de la disponibilité du vélo :', err);
+            callback(err, null);
+        } else {
+            if (result.length > 0) {
+                // Si le résultat est trouvé, le vélo est déjà loué
+                callback(null, false);
+            } else {
+                // Si le résultat est vide, le vélo est disponible
+                callback(null, true);
+            }
+        }
+    });
+};
+
 
 const louerVelo = (nom, prenom, telephone, idVelo, codeRetour, callback) => {
     getUserId(nom, prenom, telephone, (err, userId) => {
@@ -56,16 +73,28 @@ const louerVelo = (nom, prenom, telephone, idVelo, codeRetour, callback) => {
                 if (err) {
                     callback(err, null);
                 } else {
-                    const dateEmprunt = new Date().toISOString().slice(0, 19).replace('T', ' '); // Format de date sans les millisecondes
-                    const sql = 'INSERT INTO Location (UserID, VeloID, DateEmprunt, CodeRetour) VALUES (?, ?, ?, ?)';
-                    const values = [userId, veloId, dateEmprunt, parseInt(codeRetour)]; // Conversion de codeRetour en entier
-                    connection.query(sql, values, (err, result) => {
+                    // Vérifier si le vélo est déjà loué
+                    checkVeloAvailability(veloId, (err, isVeloAvailable) => {
                         if (err) {
-                            console.error('Erreur lors de la location du vélo :', err);
                             callback(err, null);
                         } else {
-                            console.log('Location enregistrée avec succès');
-                            callback(null, 'Location enregistrée avec succès');
+                            if (!isVeloAvailable) {
+                                // Si le vélo est déjà loué, renvoyer un message d'erreur
+                                callback('Le vélo est déjà loué par une autre personne', null);
+                            } else {
+                                const dateEmprunt = new Date().toISOString().slice(0, 19).replace('T', ' '); // Format de date sans les millisecondes
+                                const sql = 'INSERT INTO Location (UserID, VeloID, DateEmprunt, CodeRetour) VALUES (?, ?, ?, ?)';
+                                const values = [userId, veloId, dateEmprunt, parseInt(codeRetour)]; // Conversion de codeRetour en entier
+                                connection.query(sql, values, (err, result) => {
+                                    if (err) {
+                                        console.error('Erreur lors de la location du vélo :', err);
+                                        callback(err, null);
+                                    } else {
+                                        console.log('Location enregistrée avec succès');
+                                        callback(null, 'Location enregistrée avec succès');
+                                    }
+                                });
+                            }
                         }
                     });
                 }
@@ -73,7 +102,6 @@ const louerVelo = (nom, prenom, telephone, idVelo, codeRetour, callback) => {
         }
     });
 };
-
 
 
 

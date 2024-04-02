@@ -53,27 +53,12 @@ button:hover {
   background-color: #578944; /* Vert foncé */
 }
 
-.message {
+.success-message {
   margin-top: 10px;
   padding: 10px;
   border-radius: 4px;
   font-weight: bold;
-}
-
-.error-message {
-  background-color: #f8d7da; /* Rouge clair */
-  border: 1px solid #f5c6cb; /* Rouge */
-  color: #721c24; /* Rouge foncé */
-}
-
-.success-message {
   background-color: #d4edda; /* Vert clair */
   border: 1px solid #c3e6cb; /* Vert */
   color: #155724; /* Vert foncé */
-}
-
-.footer {
-  margin-top: 20px;
-  text-align: center;
-  color: #3e5c76; /* Bleu foncé */
 }

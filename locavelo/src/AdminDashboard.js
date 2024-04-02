@@ -1,34 +1,65 @@
 import React, { useState } from 'react';
-import Map from './Map'; // Vérifiez le chemin d'importation
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
-const AdminDashboard = () => {
-  const [userData, setUserData] = useState(null);
+function AdminLoginForm() {
+  const [formData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
 
-  const handleMarkerClick = (veloId) => {
-    axios.get(`http://localhost:3001/user/${veloId}`)
-      .then(response => {
-        setUserData(response.data);
-      })
-      .catch(error => {
-        console.error('Erreur lors de la récupération des informations utilisateur :', error);
-      });
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const history = useHistory();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await axios.post('http://localhost:3001/admin-login', formData);
+      console.log(response.data);
+      setSuccessMessage('Connexion réussie en tant qu\'administrateur');
+      setFormData({ username: '', password: '' });
+      // Utilisation de useHistory pour la redirection
+      history.push('/admin-dashboard');
+    } catch (error) {
+      console.error('Erreur lors de la requête POST:', error);
+      setErrorMessage('Identifiants administrateurs incorrects');
+    }
   };
 
   return (
     <div>
-      <h2>Tableau de bord Administrateur</h2>
-      <Map onMarkerClick={handleMarkerClick} /> {/* Assurez-vous que Map reçoit onMarkerClick */}
-      {userData && (
-        <div>
-          <h3>Informations Utilisateur</h3>
-          <p>Nom: {userData.nom}</p>
-          <p>Prénom: {userData.prenom}</p>
-          <p>Téléphone: {userData.telephone}</p>
-        </div>
-      )}
+      <h2>Connexion administrateur</h2>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="username">Nom d'utilisateur :</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          required
+        />
+        <label htmlFor="password">Mot de passe :</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+        <button type="submit">Se connecter</button>
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+      </form>
     </div>
   );
-};
+}
 
-export default AdminDashboard;
+export default AdminLoginForm;

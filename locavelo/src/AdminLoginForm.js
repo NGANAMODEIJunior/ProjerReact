@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom'; // Importez useHistory pour la redirection
+import { useNavigate } from 'react-router-dom';
 
 function AdminLoginForm() {
   const [formData, setFormData] = useState({
@@ -10,7 +10,7 @@ function AdminLoginForm() {
 
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const history = useHistory(); // Initialisez useHistory
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,8 +24,8 @@ function AdminLoginForm() {
       console.log(response.data);
       setSuccessMessage('Connexion réussie en tant qu\'administrateur');
       setFormData({ username: '', password: '' });
-      // Rediriger l'utilisateur vers le tableau de bord administrateur
-      history.push('/admin-dashboard');
+      // Utilisation de useNavigate pour la redirection
+      navigate('/admin-dashboard');
     } catch (error) {
       console.error('Erreur lors de la requête POST:', error);
       setErrorMessage('Identifiants administrateurs incorrects');
