@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
 
 function AdminLoginForm() {
   const [formData, setFormData] = useState({
@@ -9,8 +9,7 @@ function AdminLoginForm() {
   });
 
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate(); // Assurez-vous que useNavigate est appelé à l'intérieur du corps du composant
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,10 +21,7 @@ function AdminLoginForm() {
     try {
       const response = await axios.post('http://localhost:3001/admin-login', formData);
       console.log(response.data);
-      setSuccessMessage('Connexion réussie en tant qu\'administrateur');
-      setFormData({ username: '', password: '' });
-      // Utilisation de useHistory pour la redirection
-      history.push('/admin-dashboard');
+      navigate('/admin-dashboard'); // Utilisez navigate à l'intérieur de handleSubmit pour rediriger après une connexion réussie
     } catch (error) {
       console.error('Erreur lors de la requête POST:', error);
       setErrorMessage('Identifiants administrateurs incorrects');
@@ -56,7 +52,6 @@ function AdminLoginForm() {
         />
         <button type="submit">Se connecter</button>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-        {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
       </form>
     </div>
   );
