@@ -19,7 +19,8 @@ app.post('/louerVelo', (req, res) => {
             } else if (err.message === 'Vous avez déjà une location en cours') {
                 res.status(400).json({ error: err.message });
             } else {
-                res.status(500).json({ error: 'Erreur lors de la location du vélo' });
+                res.status(500).json({ error: 'Erreur lors de la location du vélo' + err.message});
+               
             }
         } else {
             res.status(200).json({ message: 'Location enregistrée avec succès' });

@@ -115,7 +115,9 @@ const louerVelo = (nom, prenom, telephone, idVelo, codeRetour, callback) => {
                                 if (err) {
                                     callback(err, null);
                                 } else if (!isVeloAvailable) {
-                                    callback('Le vélo est déjà loué par une autre personne', null);
+                                    err = {}
+                                    err.message = 'Le vélo est déjà loué par une autre personne';
+                                    callback(err, null);
                                 } else {
                                     const dateEmprunt = new Date().toISOString().slice(0, 19).replace('T', ' ');
                                     const sql = 'INSERT INTO Location (UserID, VeloID, DateEmprunt, CodeRetour) VALUES (?, ?, ?, ?)';
