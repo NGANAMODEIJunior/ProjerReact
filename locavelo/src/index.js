@@ -1,13 +1,18 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import App from './App';
-import { BrowserRouter as Router } from 'react-router-dom';
+import LouerVeloForm from './LouerVeloForm';
+import ReturnVelo from './ReturnVelo';
+import './index.css';
 
-const container = document.getElementById('root');
-const root = createRoot(container);
-
-root.render(
+ReactDOM.render(
   <Router>
-    <App />
-  </Router>
+    <Routes>
+      <Route path="/" element={<App />} />
+      <Route path="/louerVelo/:idVelo" element={<LouerVeloForm />} />
+      <Route path="/return" element={<ReturnVelo />} />
+    </Routes>
+  </Router>,
+  document.getElementById('root')
 );

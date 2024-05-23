@@ -12,13 +12,11 @@ const getUserId = (nom, prenom, telephone, callback) => {
         } else {
             if (result.length > 0) {
                 const userId = result[0].ID;
-                // Vérifier si l'utilisateur est déjà associé à un vélo dans la table Location
                 checkUserCurrentLocation(userId, (err, hasCurrentLocation) => {
                     if (err) {
                         callback(err, null);
                     } else {
                         if (hasCurrentLocation) {
-                            // Si l'utilisateur a déjà une location en cours, renvoyer une erreur appropriée
                             const error = new Error('Vous avez déjà une location en cours');
                             error.statusCode = 400;
                             callback(error, null);
@@ -43,18 +41,23 @@ const getUserId = (nom, prenom, telephone, callback) => {
     });
 };
 
-const checkUserCurrentLocation = (userId, callback) => {
-    const sql = 'SELECT * FROM Location WHERE UserID = ?';
-    connection.query(sql, [userId], (err, result) => {
+
+const checkUserCurrentLocation = ({ nom, prenom, telephone }, callback) => {
+    const sql = `
+        SELECT * 
+        FROM Location 
+        INNER JOIN User ON Location.UserID = User.ID
+        WHERE User.Nom = ? AND User.Prenom = ? AND User.Telephone = ?`;
+    connection.query(sql, [nom, prenom, telephone], (err, result) => {
         if (err) {
             console.error('Erreur lors de la vérification de la location de l\'utilisateur :', err);
             callback(err, null);
         } else {
-            // Si l'utilisateur est déjà associé à un vélo dans la table Location
             callback(null, result.length > 0);
         }
     });
 };
+
 
 
 const getVeloId = (idVelo, callback) => {
@@ -141,7 +144,30 @@ const louerVelo = (nom, prenom, telephone, idVelo, codeRetour, callback) => {
     });
 };
 
+const rendreVelo = (idVelo, codeRetour, callback) => {
+    const sql = 'SELECT * FROM Location WHERE VeloID = ? AND CodeRetour = ?';
+    connection.query(sql, [idVelo, codeRetour], (err, result) => {
+        if (err) {
+            console.error('Erreur lors de la vérification du retour du vélo :', err);
+            callback(err, null);
+        } else {
+            if (result.length > 0) {
+                const sqlDelete = 'DELETE FROM Location WHERE VeloID = ?';
+                connection.query(sqlDelete, [idVelo], (err, result) => {
+                    if (err) {
+                        console.error('Erreur lors du retour du vélo :', err);
+                        callback(err, null);
+                    } else {
+                        callback(null, 'Vélo rendu avec succès');
+                    }
+                });
+            } else {
+                const error = new Error('Code de retour incorrect ou vélo non trouvé');
+                error.statusCode = 400;
+                callback(error, null);
+            }
+        }
+    });
+};
 
-
-
-module.exports = { louerVelo };
+module.exports = { louerVelo, rendreVelo, checkUserCurrentLocation };

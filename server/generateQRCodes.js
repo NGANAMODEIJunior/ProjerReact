@@ -1,4 +1,6 @@
-const QRCode = require('qrcode');
+//generatQRCodes.js
+
+const QRCode = require('qrcode'); // Importer QRCode depuis le package qrcode
 const fs = require('fs');
 const path = require('path');
 const mysql = require('mysql');
@@ -11,20 +13,22 @@ const connection = mysql.createConnection({
   database: 'Projet_Velo',
 });
 
-const generateQRCode = async (veloId) => {
+// Génération des QR codes pour la location ou le retour du vélo
+const generateQRCode = async (veloId, isRented) => {
   try {
-    const url = `http://192.168.65.107:3000/louerVelo?idVelo=${veloId}`; // URL du site de location avec l'ID du vélo
+    const url = isRented
+      ? `http://192.168.65.107:3000/return?idVelo=${veloId}`  // URL pour retourner le vélo
+      : `http://192.168.65.107:3000/louerVelo/${veloId}`; // URL pour louer le vélo
     const filePath = path.join(__dirname, 'qrcodes', `velo_${veloId}.png`);
 
-    // Vérifier si le dossier qrcodes existe, sinon le créer
     if (!fs.existsSync(path.join(__dirname, 'qrcodes'))) {
       fs.mkdirSync(path.join(__dirname, 'qrcodes'));
     }
 
     await QRCode.toFile(filePath, url, {
       color: {
-        dark: '#000', // Code couleur pour le QR code
-        light: '#FFF' // Code couleur pour le fond
+        dark: '#000',
+        light: '#FFF'
       }
     });
     console.log(`QR Code généré pour le vélo ID: ${veloId}`);
@@ -33,27 +37,20 @@ const generateQRCode = async (veloId) => {
   }
 };
 
-// Récupérer tous les vélos de la base de données
-const getAllVeloIds = () => {
-  return new Promise((resolve, reject) => {
-    const sql = 'SELECT id FROM Velo';
-    connection.query(sql, (err, results) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(results.map(row => row.id));
-    });
-  });
-};
-
 // Générer les QR codes pour tous les vélos
 const generateQRCodesForAllVelos = async () => {
   try {
-    const veloIds = await getAllVeloIds();
-    for (const id of veloIds) {
-      await generateQRCode(id);
-    }
-    console.log('Tous les QR Codes ont été générés');
+    const sql = 'SELECT id, isRented FROM Velo';
+    connection.query(sql, async (err, results) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      for (const row of results) {
+        await generateQRCode(row.id, row.isRented);
+      }
+      console.log('Tous les QR Codes ont été générés');
+    });
   } catch (err) {
     console.error('Erreur lors de la génération des QR codes:', err);
   } finally {
