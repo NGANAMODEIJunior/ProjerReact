@@ -1,17 +1,19 @@
-/* App.css */
-
 body {
-  background-image: url('C:\Users\Master\OneDrive\Bureau\React\locavelo\camp.jpg'); /* Chemin vers l'image de fond */
-  background-size: cover;
-  background-position: center;
+  background-color: #f3f7f5; /* Couleur de fond à la place de l'image */
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .login-container {
   max-width: 400px;
-  margin: 50px auto;
+  margin: 20px auto;
   padding: 20px;
   border-radius: 8px;
-  background-color: #f3f7f5; /* Vert clair - pour évoquer la verdure */
+  background-color: #fff; /* Fond blanc pour le formulaire */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre légère */
 }
 
@@ -61,4 +63,17 @@ button:hover {
   background-color: #d4edda; /* Vert clair */
   border: 1px solid #c3e6cb; /* Vert */
   color: #155724; /* Vert foncé */
+}
+
+/* Styles spécifiques pour les écrans de téléphone */
+@media (max-width: 600px) {
+  .login-container {
+    width: 90%;
+    margin: 10px;
+    padding: 15px;
+  }
+
+  button {
+    padding: 10px 20px;
+  }
 }

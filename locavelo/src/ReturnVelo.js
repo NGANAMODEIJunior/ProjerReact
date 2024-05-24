@@ -1,4 +1,3 @@
-//ReturnVelo.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
@@ -47,8 +46,8 @@ function ReturnVelo() {
       <div className="login-container">
         <h2>Retourner le vélo</h2>
         <form onSubmit={handleSubmit}>
-          <input type="text" id="idVelo" name="idVelo" value={formData.idVelo} onChange={handleChange} placeholder="ID du vélo" required readOnly/>
-          <input type="text" id="codeRetour" name="codeRetour" value={formData.codeRetour} onChange={handleChange} placeholder="Code de retour" required/>
+          <input type="text" id="idVelo" name="idVelo" value={formData.idVelo} onChange={handleChange} placeholder="ID du vélo" required readOnly />
+          <input type="text" id="codeRetour" name="codeRetour" value={formData.codeRetour} onChange={handleChange} placeholder="Code de retour" required />
           <button type="submit">Rendre le vélo</button>
         </form>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

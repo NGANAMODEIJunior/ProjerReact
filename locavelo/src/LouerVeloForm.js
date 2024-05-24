@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import './App.css';
 
 function LouerVeloForm() {
   const { idVelo } = useParams();
@@ -16,7 +17,6 @@ function LouerVeloForm() {
   const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
-    // Vérifier si l'utilisateur a déjà une location en cours
     const checkCurrentLocation = async () => {
       try {
         const response = await axios.get(`http://192.168.65.107:3001/checkLocation`, {
@@ -74,14 +74,14 @@ function LouerVeloForm() {
 
   return (
     <div className="login-container">
-      <h2>Location</h2>
+      <h2>Location de velo</h2>
       <form onSubmit={handleSubmit}>
         <input type="text" id="idVelo" name="idVelo" value={formData.idVelo} onChange={handleChange} placeholder="ID du vélo" required readOnly />
         <input type="text" id="nom" name="nom" value={formData.nom} onChange={handleChange} placeholder="Nom" required />
         <input type="text" id="prenom" name="prenom" value={formData.prenom} onChange={handleChange} placeholder="Prénom" required />
         <input type="text" id="telephone" name="telephone" value={formData.telephone} onChange={handleChange} placeholder="Téléphone" required />
         <input type="text" id="codeRetour" name="codeRetour" value={formData.codeRetour} onChange={handleChange} placeholder="Code de retour" required />
-        <button type="submit">Louer le vélo</button>
+        <button type="submit">Valider</button>
       </form>
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
