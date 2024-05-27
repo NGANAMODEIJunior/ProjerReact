@@ -1,0 +1,52 @@
+/* MapPage.css*/
+
+.map-container {
+    height: 400px;
+    width: 100%;
+    margin: 20px auto;
+    background-color: red; /* Ajout pour le contrôle */
+  }
+
+  .leaflet-popup-content {
+    color: #333;
+    font-family: Arial, sans-serif;
+  }
+  
+  .leaflet-popup-tip {
+    background-color: #fff;
+  }
+  
+  .leaflet-popup-content-wrapper {
+    background-color: #fff;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
+    padding: 10px;
+  }
+  
+  .leaflet-popup-content h3 {
+    margin: 0 0 5px;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .leaflet-popup-content p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .leaflet-marker-icon {
+    background-image: url('marker-icon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 25px;
+    height: 41px;
+    cursor: pointer;
+  }
+  
+  .leaflet-popup-close-button {
+    font-size: 14px;
+    color: #666;
+  }
+  

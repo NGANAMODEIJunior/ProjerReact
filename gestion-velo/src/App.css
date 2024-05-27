@@ -1,0 +1,72 @@
+/* LoginForm.css */
+
+body {
+  background-color: #e0f7fa; /* Couleur de fond bleu clair, évoque l'eau */
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-container {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #ffffff; /* Fond blanc pour le formulaire */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère */
+  border: 2px solid #80cbc4; /* Bordure bleu-vert */
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #004d40; /* Vert foncé */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  padding: 10px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  border: 1px solid #b0bec5; /* Gris clair */
+  transition: border-color 0.3s ease; /* Transition douce pour le focus */
+}
+
+input:focus {
+  border-color: #4caf50; /* Vert clair */
+}
+
+button {
+  padding: 12px 24px;
+  margin-top: 10px;
+  background-color: #388e3c; /* Vert nature */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Transition douce */
+}
+
+button:hover {
+  background-color: #2e7d32; /* Vert foncé */
+}
+
+/* Styles spécifiques pour les écrans de téléphone */
+@media (max-width: 600px) {
+  .login-container {
+    width: 90%;
+    margin: 10px;
+    padding: 15px;
+  }
+
+  button {
+    padding: 10px 20px;
+  }
+}
