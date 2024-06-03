@@ -1,12 +1,12 @@
 //MapPage.js
 
-import React, { useEffect } from 'react';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import './MapPage.css';
+//import React, { useEffect } from 'react';
+//import L from 'leaflet';
+//import 'leaflet/dist/leaflet.css';
+//import './MapPage.css';
 
 function MapPage() {
-    useEffect(() => {
+   /* useEffect(() => {
       // Créer une instance de carte uniquement une fois lorsque le composant est monté
       const mapContainer = document.getElementById('map-container');
       console.log("Map container:", mapContainer); // Ajout du contrôle
@@ -29,7 +29,8 @@ function MapPage() {
   
     return (
       <div id="map-container" className="map-container"></div>
-    );
+    );*/
+    <h1>Interface Admin avrc carte map</h1>
   }
   
 

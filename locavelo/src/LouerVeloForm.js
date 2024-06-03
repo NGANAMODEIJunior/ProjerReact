@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+
 import './App.css';
 
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+
+
 function LouerVeloForm() {
-  const { idVelo } = useParams();
   const navigate = useNavigate();
+  const { idVelo } = useParams();
   const [formData, setFormData] = useState({
     idVelo: idVelo || '',
     nom: '',
@@ -16,29 +19,22 @@ function LouerVeloForm() {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  useEffect(() => {
-    const checkCurrentLocation = async () => {
-      try {
-        const response = await axios.get(`http://192.168.65.107:3001/checkLocation`, {
-          params: {
-            idVelo: idVelo,
-            nom: formData.nom,
-            prenom: formData.prenom,
-            telephone: formData.telephone
-          }
-        });
-        if (response.data.hasLocation) {
-          navigate(`/return?idVelo=${idVelo}`);
-        }
-      } catch (error) {
-        console.error('Erreur lors de la vérification de la location en cours', error);
+  const checkVeloStatus = useCallback(async (idVelo) => {
+    try {
+      const response = await axios.get(`http://192.168.65.107:3001/checkVelo/${idVelo}`);
+      if (!response.data.isAvailable) {
+        navigate(`/return?idVelo=${idVelo}`);
       }
-    };
-
-    if (formData.nom && formData.prenom && formData.telephone) {
-      checkCurrentLocation();
+    } catch (error) {
+      console.error('Erreur lors de la vérification du vélo:', error);
     }
-  }, [formData.nom, formData.prenom, formData.telephone, idVelo, navigate]);
+  }, [navigate]);
+
+  useEffect(() => {
+    if (idVelo) {
+      checkVeloStatus(idVelo);
+    }
+  }, [idVelo, checkVeloStatus]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -48,6 +44,22 @@ function LouerVeloForm() {
     e.preventDefault();
     
     try {
+      // Vérifier si l'utilisateur a déjà une location en cours
+      const userCheckResponse = await axios.get('http://192.168.65.107:3001/checkLocation', {
+        params: {
+          nom: formData.nom,
+          prenom: formData.prenom,
+          telephone: formData.telephone
+        }
+      });
+
+      if (userCheckResponse.data.hasLocation) {
+        setErrorMessage('Vous avez déjà une location en cours.');
+        setSuccessMessage('');
+        return;
+      }
+
+      // Procéder à la location du vélo
       const response = await axios.post('http://192.168.65.107:3001/louerVelo', formData);
       setSuccessMessage(response.data.message);
       setErrorMessage('');
@@ -74,14 +86,55 @@ function LouerVeloForm() {
 
   return (
     <div className="login-container">
-      <h2>Location de velo</h2>
+      <h2>Location</h2>
       <form onSubmit={handleSubmit}>
-        <input type="text" id="idVelo" name="idVelo" value={formData.idVelo} onChange={handleChange} placeholder="ID du vélo" required readOnly />
-        <input type="text" id="nom" name="nom" value={formData.nom} onChange={handleChange} placeholder="Nom" required />
-        <input type="text" id="prenom" name="prenom" value={formData.prenom} onChange={handleChange} placeholder="Prénom" required />
-        <input type="text" id="telephone" name="telephone" value={formData.telephone} onChange={handleChange} placeholder="Téléphone" required />
-        <input type="text" id="codeRetour" name="codeRetour" value={formData.codeRetour} onChange={handleChange} placeholder="Code de retour" required />
-        <button type="submit">Valider</button>
+        <input
+          type="text"
+          id="idVelo"
+          name="idVelo"
+          value={formData.idVelo}
+          onChange={handleChange}
+          placeholder="ID du vélo"
+          readOnly
+          required
+        />
+        <input
+          type="text"
+          id="nom"
+          name="nom"
+          value={formData.nom}
+          onChange={handleChange}
+          placeholder="Nom"
+          required
+        />
+        <input
+          type="text"
+          id="prenom"
+          name="prenom"
+          value={formData.prenom}
+          onChange={handleChange}
+          placeholder="Prénom"
+          required
+        />
+        <input
+          type="text"
+          id="telephone"
+          name="telephone"
+          value={formData.telephone}
+          onChange={handleChange}
+          placeholder="Téléphone"
+          required
+        />
+        <input
+          type="text"
+          id="codeRetour"
+          name="codeRetour"
+          value={formData.codeRetour}
+          onChange={handleChange}
+          placeholder="Code de retour"
+          required
+        />
+        <button type="submit">Louer le vélo</button>
       </form>
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}

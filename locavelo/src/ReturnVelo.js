@@ -47,7 +47,7 @@ function ReturnVelo() {
         <h2>Retourner le vélo</h2>
         <form onSubmit={handleSubmit}>
           <input type="text" id="idVelo" name="idVelo" value={formData.idVelo} onChange={handleChange} placeholder="ID du vélo" required readOnly />
-          <input type="text" id="codeRetour" name="codeRetour" value={formData.codeRetour} onChange={handleChange} placeholder="Code de retour" required />
+          <input type="text" id="codeRetour" name="codeRetour" value={formData.codeRetour} onChange={handleChange} placeholder="Code de retour(3 chiffres maximum)" required />
           <button type="submit">Rendre le vélo</button>
         </form>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

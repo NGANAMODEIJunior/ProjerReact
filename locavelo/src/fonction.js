@@ -47,7 +47,7 @@ const checkUserCurrentLocation = ({ nom, prenom, telephone }, callback) => {
         SELECT * 
         FROM Location 
         INNER JOIN User ON Location.UserID = User.ID
-        WHERE User.Nom = ? AND User.Prenom = ? AND User.Telephone = ?`;
+        WHERE User.Nom = ? AND User.Prenom = ? `;
     connection.query(sql, [nom, prenom, telephone], (err, result) => {
         if (err) {
             console.error('Erreur lors de la vérification de la location de l\'utilisateur :', err);
