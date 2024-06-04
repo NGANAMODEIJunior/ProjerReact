@@ -131,8 +131,10 @@ function LouerVeloForm() {
           name="codeRetour"
           value={formData.codeRetour}
           onChange={handleChange}
-          placeholder="Code de retour"
+          placeholder="Code de retour(4 chiffres)"
           required
+          maxLength={4}
+          minLength={4}
         />
         <button type="submit">Louer le vélo</button>
       </form>
