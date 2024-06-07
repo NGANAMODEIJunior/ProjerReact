@@ -138,7 +138,7 @@ function updateBikeCoordinatesFromLocationTable() {
     });
 }
 
-setInterval(updateBikeCoordinatesFromLocationTable, 12000);
+setInterval(updateBikeCoordinatesFromLocationTable, 6000);
 
 app.get('/SelectUser', (req, res) => {
     console.log('Requête GET reçue : /SelectUser');
