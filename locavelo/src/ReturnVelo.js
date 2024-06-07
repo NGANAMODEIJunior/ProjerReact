@@ -15,6 +15,7 @@ function ReturnVelo() {
   });
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [submitted, setSubmitted] = useState(false); // Nouvel état pour gérer la soumission réussie
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,6 +28,7 @@ function ReturnVelo() {
       const response = await axios.post('http://192.168.65.107:3001/rendreVelo', formData);
       setSuccessMessage(response.data.message);
       setErrorMessage('');
+      setSubmitted(true); // Mettre à jour l'état de soumission réussie
       setFormData({
         idVelo: '',
         codeRetour: ''
@@ -44,12 +46,15 @@ function ReturnVelo() {
   return (
     <div className="App">
       <div className="login-container">
-        <h2>Retourner le vélo</h2>
-        <form onSubmit={handleSubmit}>
-          <input type="text" id="idVelo" name="idVelo" value={formData.idVelo} onChange={handleChange} placeholder="ID du vélo" required readOnly />
-          <input type="text" id="codeRetour" name="codeRetour" value={formData.codeRetour} onChange={handleChange} placeholder="Code de retour(4 chiffres)" required  maxLength={4} minLength={4}/>
-          <button type="submit">Rendre le vélo</button>
-        </form>
+        <h2>Rendre le vélo</h2>
+        {!submitted && ( // Conditionner l'affichage du formulaire
+          <form onSubmit={handleSubmit}>
+            <input type="text" id="idVelo" name="idVelo" value={formData.idVelo} onChange={handleChange} placeholder="ID du vélo" required readOnly />
+            <input type="text" id="codeRetour" name="codeRetour" value={formData.codeRetour} onChange={handleChange} placeholder="Code de retour(4 chiffres)" required maxLength={4} minLength={4}   pattern="[0-9]*" />
+            <button type="submit">Rendre le vélo</button>
+          </form>
+        )}
+       
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
       </div>

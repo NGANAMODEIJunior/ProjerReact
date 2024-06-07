@@ -1,7 +1,8 @@
+// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginForm from './LoginForm';
-import MapPage from './MapPage';
+import Map from './MapPage'; // Importer le composant Map
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
       <div>
         <Routes>
           <Route path="/" element={<LoginForm />} />
-          <Route path="/map" element={<MapPage />} />
+          <Route path="/map" element={<Map />} />
         </Routes>
       </div>
     </Router>
