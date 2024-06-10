@@ -40,6 +40,7 @@ app.post('/login', (req, res) => {
     });
 });
 
+
 // Fonction pour vérifier la disponibilité du vélo
 const checkVeloAvailability = (veloId, callback) => {
     const sql = 'SELECT * FROM Location WHERE VeloID = ?';

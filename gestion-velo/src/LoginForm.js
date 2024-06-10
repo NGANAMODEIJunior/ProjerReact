@@ -1,4 +1,3 @@
-// LoginForm.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -7,26 +6,37 @@ import './App.css';
 function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Utiliser useNavigate pour la redirection
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
+
     try {
-      const response = await axios.post(`${window.location.protocol}//${window.location.hostname}:3001/login`, { username, password });
+      const response = await axios.post('http://localhost:3001/login', { username, password });
       if (response.data.success) {
-        navigate('/map'); // Rediriger vers /map
+        navigate('/map'); // Redirection vers la page /map
       } else {
-        alert('Identifiants incorrects');
+        setErrorMessage(response.data.message || 'Identifiants incorrects');
       }
     } catch (error) {
       console.error('Erreur de connexion :', error);
-      alert('Une erreur est survenue lors de la connexion');
+
+      if (error.response && error.response.status === 401) {
+        setErrorMessage('Identifiants incorrects');
+      } else if (error.response && error.response.status === 500) {
+        setErrorMessage('Erreur serveur. Veuillez réessayer plus tard.');
+      } else {
+        setErrorMessage('Une erreur est survenue lors de la connexion.');
+      }
     }
   };
 
   return (
     <div className="login-container">
       <h2>Connexion</h2>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
